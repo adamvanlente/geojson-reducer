@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const reducer = require('../reducer/')
 const fs      = require('fs')
 

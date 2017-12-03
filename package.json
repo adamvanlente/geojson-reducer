@@ -1,6 +1,6 @@
 {
   "name": "geojson-reducer",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "GeoJson Reducer simplifies the coordinates of GeoJson data, in order to reduce the file/object size.",
   "main": "index.js",
   "scripts": {
