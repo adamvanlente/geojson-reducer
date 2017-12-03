@@ -21,7 +21,7 @@ const userSpecifiedDestination = () => {
 }
 
 /*
- * Returns default destination name, which is simply "sourceFile-reduced.json".
+ * Returns default destination name, which is simply "sourceFile-sm.json".
  *
  */
 const defaultDesintaion = () => {
