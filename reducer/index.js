@@ -1,41 +1,37 @@
 
-const parseJson = require('parse-json');
-
+/*
+ * Find features on the main GeoJson object.
+ *
+ */
 const findFeatures = (geoJson) => {
   if (!geoJson.features) return
-  let features = geoJson.features
-  features.map((feature, index) => {
+  geoJson.features.map((feature, index) => {
     findCoordinates(feature, index)
   })
 }
 
+/*
+ * Find coordinates on a GeoJson Feature.
+ *
+ */
 const findCoordinates = (feature, index) => {
   if (!feature.geometry) return
   if (!feature.geometry.coordinates) return
-  let coordinates = feature.geometry.coordinates
-
-  mapCoordinates(coordinates)
+  mapCoordinates(feature.geometry.coordinates)
 }
 
-const PCT = 2
-
-const countCoordinates = (coordinates) => {
-  coordinates.map((coordinate, index) => {
-    if (typeof coordinate == 'object' && typeof coordinate[0] == 'object') {
-      mapCoordinates(coordinate)
-    } else {
-      coordinateCounter++
-    }
-  })
-}
-
+/*
+ * Traverse all of the coordinates in the GeoJson, and remove any that
+ * do not seem critical to the specific shape of the object.
+ *
+ */
 const mapCoordinates = (coordinates) => {
   coordinates.map((coordinate, index) => {
     if (typeof coordinate == 'object' && typeof coordinate[0] == 'object') {
       mapCoordinates(coordinate)
     } else {
       totalCoords++
-      if (totalCoords % PCT == 0) {
+      if (totalCoords % 2 == 0) {
         if (coordinatesAreSimilar(coordinate, prevCoord)) {
           coordinates.splice(index, 1)
           removedCoordCount++
@@ -50,11 +46,15 @@ const mapCoordinates = (coordinates) => {
       }
     }
   })
-
 }
 
+/*
+ * Deterime if coordinates are similar. If so, we determine that it is safe
+ * enough to remove 'coordinate'. If not, `coordinate` is considered unique,
+ * and at least somewhat critical to the overall shape of the GeoJson feature.
+ *
+ */
 const coordinatesAreSimilar = (coordinate, previousCoordinate) => {
-  // return true
   if (!coordinate || !previousCoordinate) return false
 
   let lat = coordinate[0]
@@ -68,12 +68,13 @@ const coordinatesAreSimilar = (coordinate, previousCoordinate) => {
   return (latDiff < 0.01 && lonDiff < 0.01)
 }
 
-const removalMessage = (coord) => {
-  console.log(`Removing non-critical coord at ${coord}`)
-}
+// Message that a set of coordinates has been removed.
+const removalMessage = (coord) => console.log(`Removing non-critical coord at ${coord}`)
 
+// Add commas to a number.
 const numberWithCommas = (x) => x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
+// Message after reduction has been completed.
 const messageAfterReduction = () => {
   let pct = (coordCount / totalCoords) * 100
   console.log(
@@ -84,8 +85,6 @@ const messageAfterReduction = () => {
   Result: ${pct.toFixed(0)}% of coordinates removed.
 -----
 `)
-
-
 }
 
 let totalCoords
@@ -95,19 +94,29 @@ let prevCoord
 let coordinateCounter
 let verbose
 
+/*
+ * Core function that begins the process of reducing coordinates.
+ *
+ */
 exports.reduceCoordinates = (data, isVerbose) => {
   try {
 
-    data = parseJson(data)
+    // Parse data to JSON.
+    data = JSON.parse(data)
 
+    // Determine if verbose flag has been passed in.
     verbose = isVerbose
 
+    // Reset global vars.
     totalCoords = 0
     coordCount = 0
     removedCoordCount = 0
     prevCoord
 
+    // Find features, and reduce coordinates on each feature.
     findFeatures(data)
+
+    // Feedback about reduction results.
     messageAfterReduction()
 
     return data
