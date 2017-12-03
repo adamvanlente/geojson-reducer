@@ -1,0 +1,18 @@
+{
+  "name": "geojson-reducer",
+  "version": "1.0.0",
+  "description": "GeoJson Reducer simplifies the coordinates of GeoJson data, in order to reduce the file/object size.",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "bin": {
+    "geojson-reducer": "./index.js"
+  },
+  "keywords": [
+    "GeoJson"
+  ],
+  "author": "Adam VanLente",
+  "license": "ISC",
+  "dependencies": {}
+}
