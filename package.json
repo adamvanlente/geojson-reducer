@@ -7,12 +7,16 @@
     "test": "node test.js"
   },
   "bin": {
-    "geojson-reducer": "./index.js"
+    "geojson-reducer": "./bin/index.js"
   },
   "keywords": [
-    "GeoJson"
+    "GeoJson", "simplify", "reduce"
   ],
-  "author": "Adam VanLente",
-  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/adamvanlente/geojson-reducer"
+  },
+  "author": "adamvanlente <adamvanlente@gmail.com> (https://github.com/adamvanlente)",
+  "license": "MIT",
   "dependencies": {}
 }
