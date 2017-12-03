@@ -35,11 +35,11 @@ const mapCoordinates = (coordinates) => {
       mapCoordinates(coordinate)
     } else {
       totalCoords++
-
       if (totalCoords % PCT == 0) {
         if (coordinatesAreSimilar(coordinate, prevCoord)) {
           coordinates.splice(index, 1)
           removedCoordCount++
+          if (verbose) removalMessage(coordinate)
         } else {
           coordCount++
           prevCoord = coordinate
@@ -68,16 +68,24 @@ const coordinatesAreSimilar = (coordinate, previousCoordinate) => {
   return (latDiff < 0.01 && lonDiff < 0.01)
 }
 
+const removalMessage = (coord) => {
+  console.log(`Removing non-critical coord at ${coord}`)
+}
+
 const numberWithCommas = (x) => x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
 const messageAfterReduction = () => {
   let pct = (coordCount / totalCoords) * 100
-  let message =
-  `Original GeoJson has ${numberWithCommas(totalCoords)} coordinates.
-  Reduced down to ${numberWithCommas(coordCount)}.
-  Result: ${pct.toFixed(0)}% of coordinates removed.`
+  console.log(
+`
+-----
+  Original GeoJson has ${numberWithCommas(totalCoords)} coordinates.
+  Reduced down to ${numberWithCommas(coordCount)}; removed ${numberWithCommas(removedCoordCount)} coords.
+  Result: ${pct.toFixed(0)}% of coordinates removed.
+-----
+`)
 
-  console.log(message)
+
 }
 
 let totalCoords
@@ -85,11 +93,14 @@ let coordCount
 let removedCoordCount
 let prevCoord
 let coordinateCounter
+let verbose
 
-exports.reduceCoordinates = (data) => {
+exports.reduceCoordinates = (data, isVerbose) => {
   try {
 
     data = parseJson(data)
+
+    verbose = isVerbose
 
     totalCoords = 0
     coordCount = 0

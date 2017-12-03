@@ -2,13 +2,18 @@ const reducer = require('../reducer/')
 const fs      = require('fs')
 
 /*
+ * Determine if this is a verbose readout or not.
+ *
+ */
+const isVerbose = () => args.indexOf('-verbose') != -1
+
+/*
  * Returns user specified destination file name from command line.
  *
  */
 const userSpecifiedDestination = () => {
-  if (args[3] && args[3] == '-d' || args[3] && args[3] == '-destination') {
-    if (args[4]) return args[4]
-  }
+  let destinationIndex = args.indexOf('-d')
+  if (destinationIndex !== -1) return args[destinationIndex + 1]
 
   return
 }
@@ -39,6 +44,7 @@ const srcFileName = () => args[2]
 let args = process.argv
 let srcFile = srcFileName()
 let destination = defaultDesintaion()
+
 if (userSpecifiedDestination()) destination = userSpecifiedDestination()
 
 /*
@@ -49,13 +55,14 @@ fs.readFile(srcFile, 'latin1', function (err, data) {
   // JSON.parse(data)
 
   if (!err) {
-    let reducedJson = reducer.reduceCoordinates(data)
+    let reducedJson = reducer.reduceCoordinates(data, isVerbose())
     fs.writeFile(destination, JSON.stringify(reducedJson), function(err) {
       console.log('********************************************************')
       console.log('********************************************************')
       console.log(`--> Reduced file saved at this location: ${destination}`)
       console.log('********************************************************')
       console.log('********************************************************')
+      console.log(' ')
     });
   }
 })
