@@ -1,6 +1,10 @@
 # geojson-reducer
 
-geojson-reducer is an node package that simplifies a Polygon or MultiPolyon feature within a GeoJson object.
+
+[![Foo](https://badge.fury.io/js/geojson-reducer.svg)](https://www.npmjs.com/package/geojson-reducer)
+
+
+geojson-reducer is a node package that simplifies a Polygon or MultiPolyon feature within a GeoJson object.
 
 This package helps ease the load time of geospatial web applications that are displaying complex Polygons. These Polygons may have thousands of coordinates, many of which may not be critical to achieve the basic shape of the Polygon. Perhaps the Polygons load slowly, or perhaps a file being requested is simply too large.
 
