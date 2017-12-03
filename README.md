@@ -57,5 +57,5 @@ let reducedGeoJson = geojsonReducer.reduceCoordinates(originalGeoJson)
 
 ```
 
-## See it in action
+## [See it in action](https://adamvanlente.github.io/geojson/)
 ---
